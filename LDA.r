@@ -1,6 +1,3 @@
-# Title: perform_lda.R
-# Author: Gemini
-# Date: 2025-10-09
 # Description: Performs LDA on fly wing harmonic data and saves results for Python plotting.
 
 # --- 1. Install and Load Required Libraries ---
@@ -80,4 +77,5 @@ write_csv(variance_df, "lda_variance.csv")
 # --- 7. Confirmation Message ---
 print("✅ LDA calculation complete. Two files were generated:")
 print("- lda_results.csv (LD scores with species and sex)")
+
 print("- lda_variance.csv (Explained variance for each LD)")
