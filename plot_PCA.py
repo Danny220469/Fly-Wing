@@ -1,6 +1,3 @@
-# Title: create_pca_plot.py (Final Version with HTML Panel)
-# Author: Gemini
-# Date: 2025-10-09
 # Description: A performant plot that fades on hover and shows details in a separate HTML panel on click.
 
 import pandas as pd
@@ -165,3 +162,4 @@ output_path = os.path.join(script_dir, output_filename)
 fig.write_html(output_path, post_script=js_code, include_plotlyjs=True)
 
 print(f"✅ Successfully saved the interactive plot to: {output_path}")
+
