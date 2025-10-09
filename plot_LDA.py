@@ -1,4 +1,7 @@
-# Description: A performant plot that fades on hover and shows details in a separate HTML panel on click.
+# Title: create_lda_plot.py (Final Responsive Version with Italic Legend)
+# Author: Gemini
+# Date: 2025-10-09
+# Description: A performant, responsive plot that fades on hover, shows details in a panel, and features an italicized legend.
 
 import pandas as pd
 import plotly.express as px
@@ -50,7 +53,8 @@ for trace in fig.data:
     if 'female' not in trace.name:
         species_name = trace.name.split(',')[0]
         trace.legendgroup = species_name
-        trace.name = species_name
+        # ✅ Wrap the species name in <i> tags for italics
+        trace.name = f"<i>{species_name}</i>"
         trace.showlegend = True
         trace.marker.update(size=6, line=dict(width=0.5, color='Black'), opacity=0.8)
 for trace in fig.data:
@@ -65,8 +69,11 @@ for trace in fig.data:
 fig.update_layout(
     hovermode=False, # Disable Plotly's native hover system
     legend=dict(
-        title="Species", title_font=dict(size=25), font=dict(size=22),
-        itemsizing='constant', bgcolor='rgba(255,255,255,0.7)',
+        title_text="<b>Species</b><br><span style='font-size: 18px;'>(Male ●, Female ×)</span>",
+        title_font=dict(size=20),
+        font=dict(size=18),
+        itemsizing='constant',
+        bgcolor='rgba(255,255,255,0.7)',
     ),
     scene=dict(
         xaxis_title_font=dict(size=16),
@@ -76,30 +83,23 @@ fig.update_layout(
     title_font=dict(size=22),
 )
 
-# Annotation for symbols (Male/Female)
-fig.add_annotation(
-    text="(Male ●, Female ×)", xref="paper", yref="paper",
-    x=1.25, y=0.4, xanchor="right", yanchor="bottom",
-    showarrow=False, font=dict(size=20, color="black")
-)
-
-# ✅ REMOVED: The Plotly annotation for click details has been removed.
-# It is now replaced by a pure HTML element created by the JavaScript below.
 
 # --- 5. Add interactivity via JavaScript ---
 js_code = """
 var plot_div = document.getElementsByClassName('plotly-graph-div')[0];
 
 // --- 1. Create a custom HTML info panel and its style ---
-// This is faster and more reliable than using Plotly annotations.
-
-// Create the style for the info panel
 var style = document.createElement('style');
 style.innerHTML = `
+/* Make the plot container a positioning context */
+.plotly-graph-div {
+    position: relative !important;
+}
 #info-panel {
     position: absolute;
-    bottom: 165px;
-    right: 70px;
+    /* Position relative to the plot div, not the window */
+    bottom: 20px;
+    right: 20px;
     padding: 10px;
     background-color: rgba(255, 255, 255, 0.85);
     border: 1px solid #ccc;
@@ -116,7 +116,8 @@ document.head.appendChild(style);
 var infoPanel = document.createElement('div');
 infoPanel.id = 'info-panel';
 infoPanel.innerHTML = 'Click on a point for details';
-document.body.appendChild(infoPanel);
+/* Append the panel to the plot's container */
+plot_div.appendChild(infoPanel);
 
 
 // --- 2. Logic for Hover (Fading effect) ---
@@ -165,6 +166,5 @@ plot_div.on('plotly_click', function(data){
 output_filename = "interactive_lda_plot.html"
 output_path = os.path.join(script_dir, output_filename)
 fig.write_html(output_path, post_script=js_code, include_plotlyjs=True)
-
 
 print(f"✅ Successfully saved the interactive plot to: {output_path}")
