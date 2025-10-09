@@ -1,6 +1,3 @@
-# Title: create_pca_plot.py (Final Responsive Version with Italic Legend)
-# Author: Gemini
-# Date: 2025-10-09
 # Description: A performant, responsive plot that fades on hover, shows details in a panel, and features an italicized legend.
 
 import pandas as pd
@@ -166,5 +163,6 @@ plot_div.on('plotly_click', function(data){
 output_filename = "interactive_pca_plot.html"
 output_path = os.path.join(script_dir, output_filename)
 fig.write_html(output_path, post_script=js_code, include_plotlyjs=True)
+
 
 print(f"✅ Successfully saved the interactive plot to: {output_path}")
