@@ -1,4 +1,4 @@
-# Description: A performant, responsive plot that fades on hover, shows details in a panel, and features an italicized legend.
+# Description: A performant, responsive plot using the Lato font, with an updated info panel.
 
 import pandas as pd
 import plotly.express as px
@@ -50,7 +50,6 @@ for trace in fig.data:
     if 'female' not in trace.name:
         species_name = trace.name.split(',')[0]
         trace.legendgroup = species_name
-        # ✅ Wrap the species name in <i> tags for italics
         trace.name = f"<i>{species_name}</i>"
         trace.showlegend = True
         trace.marker.update(size=6, line=dict(width=0.5, color='Black'), opacity=0.8)
@@ -64,11 +63,13 @@ for trace in fig.data:
 
 # --- 4. Layout adjustments ---
 fig.update_layout(
-    hovermode=False, # Disable Plotly's native hover system
+    hovermode=False,
+    # ✅ Set the global font for the plot
+    font=dict(family="Lato"),
     legend=dict(
         title_text="<b>Species</b><br><span style='font-size: 18px;'>(Male ●, Female ×)</span>",
-        title_font=dict(size=20),
-        font=dict(size=18),
+        title_font=dict(size=25),
+        font=dict(size=22),
         itemsizing='constant',
         bgcolor='rgba(255,255,255,0.7)',
     ),
@@ -94,17 +95,17 @@ style.innerHTML = `
 }
 #info-panel {
     position: absolute;
-    /* Position relative to the plot div, not the window */
     bottom: 20px;
     right: 20px;
     padding: 10px;
     background-color: rgba(255, 255, 255, 0.85);
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-family: Arial, sans-serif;
+    /* ✅ Update font for the panel */
+    font-family: Lato;
     font-size: 20px;
-    pointer-events: none; /* Make it so you can click through it */
-    z-index: 100; /* Ensure it's on top */
+    pointer-events: none;
+    z-index: 100;
 }
 `;
 document.head.appendChild(style);
@@ -113,7 +114,6 @@ document.head.appendChild(style);
 var infoPanel = document.createElement('div');
 infoPanel.id = 'info-panel';
 infoPanel.innerHTML = 'Click on a point for details';
-/* Append the panel to the plot's container */
 plot_div.appendChild(infoPanel);
 
 
@@ -148,13 +148,17 @@ plot_div.on('plotly_click', function(data){
     var label_y = plot_div.layout.scene.yaxis.title.text;
     var label_z = plot_div.layout.scene.zaxis.title.text;
 
-    var click_text = `<b>${point.customdata[0]}</b><br>` +
-                     `Sex: ${point.customdata[1]}<br>` +
+    // ✅ Capitalize the sex for display
+    var sex = point.customdata[1];
+    var capitalizedSex = sex.charAt(0).toUpperCase() + sex.slice(1);
+
+    // ✅ Update text format: italic species, no "Sex:" label
+    var click_text = `<b><i>${point.customdata[0]}</i></b><br>` +
+                     `${capitalizedSex}<br>` +
                      `${label_x.split(' ')[0]}: ${point.x.toFixed(2)}<br>` +
                      `${label_y.split(' ')[0]}: ${point.y.toFixed(2)}<br>` +
                      `${label_z.split(' ')[0]}: ${point.z.toFixed(2)}`;
     
-    // Update the innerHTML of our custom panel
     infoPanel.innerHTML = click_text;
 });
 """
@@ -163,6 +167,5 @@ plot_div.on('plotly_click', function(data){
 output_filename = "interactive_lda_plot.html"
 output_path = os.path.join(script_dir, output_filename)
 fig.write_html(output_path, post_script=js_code, include_plotlyjs=True)
-
 
 print(f"✅ Successfully saved the interactive plot to: {output_path}")
