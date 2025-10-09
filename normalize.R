@@ -1,6 +1,3 @@
-# Title: normalize.R
-# Author: Gemini (Translated from Python)
-# Date: 2025-10-09
 # Description: Normalizes Elliptical Fourier Descriptor (EFD) coefficients to be invariant to size.
 
 # --- 1. Install and Load Required Libraries ---
@@ -86,4 +83,5 @@ input_csv <- "C:/Users/User/Documents/Bioinformatics_Year3_Sem2/Internship/Fly P
 output_csv <- "C:/Users/User/Documents/Bioinformatics_Year3_Sem2/Internship/Fly Project/normalized_efd_coefficients_10h.csv"
 
 # Run the normalization function
+
 normalize_efd_dataset_r(input_csv, output_csv)
